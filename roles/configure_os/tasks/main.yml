@@ -1,0 +1,39 @@
+---
+- name: Disable selinux
+  debug: 
+    msg: "Notification about disabling selinux"
+
+- name: Disabling selinux
+  selinux:
+    state: disabled
+
+- name: "Notification about disabling firewall"
+  debug:
+    msg: "Notification about disabling firewall"
+
+- name: Disabling firewall
+  systemd:
+    state: stopped
+    name: firewalld
+    enabled: no
+
+- name: Disabling swap
+  shell: swapoff -a
+
+- name: Remove swap from fstab
+  mount:
+    name: swap
+    fstype: swap
+    state: absent
+
+- name: Comment out swap in fstab
+  replace:
+    path: /etc/fstab
+    regexp: '(.*swap.*)'
+    replace: '# \1'
+
+- name: Add modules br_netfilter to /etc/modules-load.d/k8s.conf
+  shell: echo br_netfilter > /etc/modules-load.d/k8s.conf
+  args:
+    chdir: /etc/sysctl.d/
+    creates: k8s.conf

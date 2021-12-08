@@ -1,0 +1,10 @@
+---
+- name: Install components for kubernetes
+  hosts: kube_masters
+  become: yes
+  roles:
+ # - configure_os
+ # - docker_install
+  - etcd_install
+ # - keepalived_install
+ # - k8s_install

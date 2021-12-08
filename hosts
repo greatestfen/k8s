@@ -1,0 +1,29 @@
+[kube_masters]
+k8s-master-1 79.174.36.196:2201 keepalived_state=MASTER keepalived_priority=101 ansible_ssh_private_key_file=~/.ssh/avkey.key ansible_user=root
+k8s-master-2 79.174.36.196:2202 keepalived_state=BACKUP keepalived_priority=100 ansible_ssh_private_key_file=~/.ssh/avkey.key ansible_user=root
+k8s-master-3 79.174.36.196:2203 keepalived_state=BACKUP keepalived_priority=99 ansible_ssh_private_key_file=~/.ssh/avkey.key ansible_user=root
+
+[kube_workers]
+k8s-worker-1
+k8s-worker-2
+
+[kube_clusted:children]
+kube_masters
+kube_workers
+
+[kube_masters:vars]
+### ETCD
+BASEDOMAIN=
+g_name=etcd
+### KEEPALIVED
+keepalived_vrid=51
+keepalived_pass=keepalived
+keepalived_ip=192.168.91.254
+### DOCKER
+dckr_ce=20.10.8
+dckr_ce_cli=20.10.8
+cntnrd=1.4.9
+### K8S
+kblt=1.20.5
+kbdm=1.20.5
+kbctl=1.20.5

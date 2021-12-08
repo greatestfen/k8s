@@ -1,0 +1,29 @@
+---
+- name: Remove Docker
+  yum:
+    name:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    - runc
+    state: absent
+
+- name: Add Docker repo
+  copy:
+    src: docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo
+
+- name: Install Docker repo
+  yum:
+    name:
+    - docker-ce-{{ dckr_ce | default('20.10.8') }}
+    - docker-ce-cli-{{ dckr_ce_cli | default('20.10.8') }}
+    - containerd.io == {{ cntnrd | default('1.4.9') }}
+    state: present
+    update_cache: yes
+  notify:
+    - Systemd
+    - Docker start
+
+- name: Flush handlers
+  meta: flush_handlers
